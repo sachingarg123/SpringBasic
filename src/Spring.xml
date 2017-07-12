@@ -1,0 +1,170 @@
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:tx = "http://www.springframework.org/schema/tx"
+	xmlns:aop = "http://www.springframework.org/schema/aop" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+   http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+    http://www.springframework.org/schema/context
+   http://www.springframework.org/schema/context/spring-context-3.0.xsd
+    http://www.springframework.org/schema/tx
+   http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+   http://www.springframework.org/schema/aop 
+   http://www.springframework.org/schema/aop/spring-aop-4.0.xsd">
+
+ <aop:config>
+      <aop:aspect id = "log" ref = "logging">
+         <aop:pointcut id = "selectAll" 
+            expression = "execution(* com.example.spring.core.aop.*.*(..))"/>
+         
+         <aop:before pointcut-ref = "selectAll" method = "beforeAdvice"/>
+         <aop:after pointcut-ref = "selectAll" method = "afterAdvice"/>
+         <aop:after-returning pointcut-ref = "selectAll" 
+            returning = "retVal" method = "afterReturningAdvice"/>
+         
+         <aop:after-throwing pointcut-ref = "selectAll" 
+            throwing = "ex" method = "AfterThrowingAdvice"/>
+      </aop:aspect>
+   </aop:config>
+   
+   <tx:advice id = "txAdvice" transaction-manager = "transactionManager">
+      <tx:attributes>
+      <tx:method name = "create"/>
+      </tx:attributes>
+   </tx:advice>
+	
+   <aop:config>
+      <aop:pointcut id = "createOperation" 
+         expression = "execution(* com.example.spring.core.jdbc.StudentJDBCTemplate.create(..))"/>
+      
+      <aop:advisor advice-ref = "txAdvice" pointcut-ref = "createOperation"/>
+   </aop:config>
+   
+   <!-- <aop:aspectj-autoproxy/> -->
+
+	<context:annotation-config />
+	<context:component-scan base-package="com.example.spring.core.component"></context:component-scan>
+	<bean id="beanTeamplate" abstract="true">
+		<property name="message" value="Hello World!" />
+		<property name="message1" value="Hello World2!" />
+		<!-- <property name = "message2" value = "Hello Second World!"/> <property 
+			name = "message3" value = "Namaste India!"/> -->
+	</bean>
+
+	<bean class="com.example.spring.core.HelloWorld" id="helloWorld"
+		scope="prototype" parent="beanTeamplate"><!-- init-method="init" destroy-method="destroy" -->
+		<property name="message" value="Hello World!">
+		</property>
+	</bean>
+	<bean class="com.example.spring.core.InitHelloWorld" />
+	<bean class="com.example.spring.core.BeanPostProcessorImpl" />
+
+	<bean class="com.example.spring.core.di.TextEditor" id="textEditor">
+		<!-- autowire="byType"> -->
+		<!-- <constructor-arg ref="spellChecker"></constructor-arg> -->
+		<!-- <property name="spellChecker" ref="spellChecker"></property> -->
+	</bean>
+
+	<bean class="com.example.spring.core.di.SpellChecker" id="SpellChecker">
+	</bean>
+
+<!-- 	<bean class="com.example.spring.core.DataSource" id="dataSource">
+		<property name="driverClassName" value="${jdbc.driverClassName}" />
+		<property name="url" value="${jdbc.url}" />
+		<property name="username" value="${jdbc.username}" />
+		<property name="password" value="${jdbc.password}" />
+	</bean> -->
+
+	<bean class="com.example.spring.core.autowire.Profile" id="profile" />
+	<bean class="com.example.spring.core.autowire.Student" id="student1">
+		<property name="age" value="21" />
+		<property name="name" value="sachin" />
+	</bean>
+
+	<bean class="com.example.spring.core.autowire.Student" id="student2">
+		<property name="age" value="18" />
+		<property name="name" value="megha" />
+	</bean>
+
+	<bean class="com.example.spring.core.component.Point" id="pointA">
+		<property name="x" value="10" />
+		<property name="y" value="20" />
+	</bean>
+
+	<bean class="com.example.spring.core.component.Point" id="pointB">
+		<property name="x" value="-1" />
+		<property name="y" value="2" />
+	</bean>
+
+	<bean class="com.example.spring.core.component.Point" id="pointC">
+		<property name="x" value="12" />
+		<property name="y" value="21" />
+	</bean>
+
+
+	<!-- Property file reading -->
+
+	<bean class="com.example.spring.core.component.Point" id="centre">
+		<property name="x" value="12" />
+		<property name="y" value="21" />
+	</bean>
+	<bean class="org.springframework.context.support.ResourceBundleMessageSource"
+		id="messageSource">
+		<property name="basenames">
+			<list>
+				<value>myMessages</value>
+			</list>
+		</property>
+	</bean>
+
+
+	<!-- Event registered -->
+
+	<bean class="com.example.spring.core.event.SampleClass" id="sampleclass">
+		<property name="message" value="Hello World!">
+		</property>
+	</bean>
+
+	<bean class="com.example.spring.core.event.CStartEventHandler" />
+	<bean class="com.example.spring.core.event.CStopEventHandler" />
+
+	<bean id="customEventHandler" class="com.example.spring.core.event.CustomEventHandler" />
+	<bean id="customEventPublisher" class="com.example.spring.core.event.CustomEventPublisher" />
+
+	<!-- AOP Concept -->
+	
+	
+   <!-- Definition for student bean -->
+   <bean id = "student" class = "com.example.spring.core.aop.Student">
+      <property name = "name" value = "Zara" />
+      <property name = "age" value = "11"/>      
+   </bean>
+
+   <!-- Definition for logging aspect -->
+   <bean id = "logging" class = "com.example.spring.core.aop.Logging"/>
+    
+   <!-- JDBC Template example  -->
+   
+   <!-- Initialization for data source -->
+   <bean id="dataSource1" 
+      class = "org.springframework.jdbc.datasource.DriverManagerDataSource">
+      <property name = "driverClassName" value = "com.mysql.jdbc.Driver"/>
+      <property name = "url" value = "jdbc:mysql://localhost:3306/sachin"/>
+      <property name = "username" value = "root"/>
+      <property name = "password" value = "password1"/>
+   </bean>
+   
+   <!-- Initialization for TransactionManager -->
+   <bean id = "transactionManager" 
+      class = "org.springframework.jdbc.datasource.DataSourceTransactionManager">
+      <property name = "dataSource"  ref = "dataSource1" />    
+   </bean>
+
+   <!-- Definition for studentJDBCTemplate bean -->
+   <bean id = "studentJDBCTemplate" 
+      class = "com.example.spring.core.jdbc.StudentJDBCTemplate">
+      <property name = "dataSource" ref = "dataSource1" />   
+      <!-- <property name = "transactionManager" ref = "transactionManager" />   -->
+   </bean>
+
+</beans>
