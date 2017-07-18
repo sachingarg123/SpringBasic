@@ -9,7 +9,7 @@ public class MainApp {
 	
 	public static void main(String[] args) {
 		AbstractApplicationContext context = new FileSystemXmlApplicationContext(
-				"C:/Users/sachin/workspace/springSample/src/Spring.xml");
+				"C:/Users/Sachin Garg/workspace/springSample/springSample/src/Spring.xml");
 
 	      StudentJDBCTemplate studentJDBCTemplate = 
 	         (StudentJDBCTemplate)context.getBean("studentJDBCTemplate");

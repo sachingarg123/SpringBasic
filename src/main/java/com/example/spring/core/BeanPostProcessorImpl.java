@@ -10,7 +10,7 @@ public class BeanPostProcessorImpl implements BeanFactoryPostProcessor {
 
 	public void postProcessBeanFactory(ConfigurableListableBeanFactory arg0) throws BeansException {
 		PropertyPlaceholderConfigurer cfg = new PropertyPlaceholderConfigurer();  
-		 cfg.setLocation(new FileSystemResource("C:/Users/sachin/workspace/springSample/src/databaseConfig.properties"));  
+		 cfg.setLocation(new FileSystemResource("C:/Users/Sachin Garg/workspace/springSample/springSample/src/databaseConfig.properties"));  
 		 cfg.postProcessBeanFactory(arg0); 
 		 System.out.println("Bean factory post processor is initialized");
 		 }

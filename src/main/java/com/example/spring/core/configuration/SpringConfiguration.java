@@ -12,6 +12,7 @@ public class SpringConfiguration {
 		HelloWorldExample helloWorld = ctx.getBean(HelloWorldExample.class);
 		      helloWorld.setMessage("Hello World!");
 		      helloWorld.getMessage();
+		      helloWorld.getHelloWorldComponent();
 	}
 
 }

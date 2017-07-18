@@ -14,7 +14,7 @@ public class SpringTestApp {
 	public static void main(String[] args) {
 		// ClassPathXmlApplicationContext is load all beans in the application
 		AbstractApplicationContext context = new FileSystemXmlApplicationContext(
-				"C:/Users/sachin/workspace/springSample/src/Spring.xml");
+				"C:/Users/Sachin Garg/workspace/springSample/springSample/src/Spring.xml");
 		// this step is used to get required bean using getBean() method of the
 		// created context
 		HelloWorld helloWorld = (HelloWorld) context.getBean("helloWorld");
@@ -31,9 +31,9 @@ public class SpringTestApp {
 		TextEditor textEditor = (TextEditor) context.getBean("textEditor");
 		textEditor.spellCheck();
 
-		DataSource dataSource = (DataSource) context.getBean("dataSource");
+		/*DataSource dataSource = (DataSource) context.getBean("dataSource");
 		System.out.println("DataSource driver name is" + dataSource.getDriverClassName());
-
+*/
 		Profile profile = (Profile) context.getBean("profile");
 		profile.printAge();
 		profile.printName();
